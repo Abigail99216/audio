@@ -172,6 +172,15 @@ class AsyncCheatExperimentFunctions:
             if result:
                 if result.status == 'success':
                     logger.info(f"转录任务完成: {task_id}")
+                    # 根据音频文件名更新当前病例
+                    audio_filename = os.path.basename(audio_file)
+                    if "吴女士" in audio_filename:
+                        self.current_case = "吴女士"
+                    elif "王女士" in audio_filename:
+                        self.current_case = "王女士"
+                    elif "张先生" in audio_filename:
+                        self.current_case = "张先生"
+                    logger.info(f"更新当前病例为: {self.current_case}")
                     return result.result
                 else:
                     logger.error(f"转录任务失败: {result.result}")
@@ -239,9 +248,20 @@ class AsyncCheatExperimentFunctions:
                 logger.warning("多进程调度器不可用，使用同步推理")
                 return self.generate_medical_reasoning(text)
             
-            # 提交任务到多进程调度器
-            task_id = scheduler.submit_task("reasoning", text, uid)
-            logger.info(f"医疗推理任务已提交: {task_id}")
+            # 获取当前病例名称
+            case_name = self.current_case
+            if not case_name:
+                # 尝试从文本中推断病例名称
+                if "吴女士" in text:
+                    case_name = "吴女士"
+                elif "王女士" in text:
+                    case_name = "王女士"
+                elif "张先生" in text:
+                    case_name = "张先生"
+            
+            # 提交任务到多进程调度器，传递病例名称
+            task_id = scheduler.submit_task("reasoning", text, uid, case_name=case_name)
+            logger.info(f"医疗推理任务已提交: {task_id}, 病例: {case_name}")
             
             # 等待任务完成并获取结果
             max_wait_time = 60  # 推理任务允许更长时间
