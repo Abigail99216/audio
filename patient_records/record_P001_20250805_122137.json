@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-08-05 12:21:37",
+  "uid": "test001",
+  "patient_info": {
+    "name": "张三",
+    "patient_id": "P001",
+    "age": 35,
+    "gender": "男"
+  },
+  "medical_record": {
+    "chief_complaint": "头痛3天",
+    "present_illness": "患者3天前开始出现头痛，呈持续性钝痛",
+    "past_history": "既往体健",
+    "physical_exam": "神志清楚，精神可",
+    "diagnosis": "紧张性头痛",
+    "treatment_plan": "休息，对症治疗"
+  }
+}
